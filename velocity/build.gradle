@@ -30,7 +30,7 @@ dependencies {
 
 
 shadowJar {
-    archiveBaseName.set('MultiLogin-Velocity')
+    archiveBaseName.set('MultiLogin-Velocity-Reloaded')
 
     if (System.getProperty("env", "AUTO") == "final") {
         archiveVersion.set(project.plugin_version as String)

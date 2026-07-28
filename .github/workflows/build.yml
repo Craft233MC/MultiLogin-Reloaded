@@ -68,6 +68,6 @@ jobs:
           automatic_release_tag: "v${{ env.version }}"
           draft: false
           prerelease: false
-          title: "MultiLogin v${{ env.version }}"
+          title: "MultiLogin Reloaded v${{ env.version }}"
           files: |
-            velocity/build/libs/MultiLogin-Velocity-${{ env.version }}.jar
+            velocity/build/libs/MultiLogin-Velocity-Reloaded-${{ env.version }}.jar
