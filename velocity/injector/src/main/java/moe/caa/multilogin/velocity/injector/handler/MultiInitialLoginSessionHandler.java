@@ -132,7 +132,8 @@ public class MultiInitialLoginSessionHandler {
                         VelocityServer.class,
                         LoginInboundConnection.class,
                         com.velocitypowered.api.util.GameProfile.class,
-                        boolean.class
+                        boolean.class,
+                        String.class
                 )
         ));
     }
@@ -218,7 +219,11 @@ public class MultiInitialLoginSessionHandler {
                                 try {
                                     this.mcConnection.setActiveSessionHandler(StateRegistry.LOGIN,
                                             (AuthSessionHandler) authSessionHandler_allArgsConstructor.invoke(
-                                                    this.server, inbound, generateGameProfile(finalGameProfile), true
+                                                    this.server,
+                                                    inbound,
+                                                    generateGameProfile(finalGameProfile),
+                                                    true,
+                                                    generateServerId(packet)
                                             ));
                                 } catch (Throwable e) {
                                     throw new RuntimeException(e);
@@ -251,5 +256,18 @@ public class MultiInitialLoginSessionHandler {
                         new com.velocitypowered.api.util.GameProfile.Property(s.getName(), s.getValue(), s.getSignature())
                 ).collect(Collectors.toList())
         );
+    }
+
+    private String generateServerId(EncryptionResponsePacket packet) {
+        try {
+            KeyPair serverKeyPair = getServer().getServerKeyPair();
+            byte[] decryptedSharedSecret = EncryptionUtils.decryptRsa(serverKeyPair, packet.getSharedSecret());
+            return com.velocitypowered.proxy.crypto.EncryptionUtils.generateServerId(
+                decryptedSharedSecret,
+                serverKeyPair.getPublic()
+            );
+        } catch (GeneralSecurityException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
